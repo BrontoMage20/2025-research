@@ -43,7 +43,7 @@ script_start=$(date +%s%N)
 total_image_time=0
 
 #loop through all .jpg files in the cover directory
-for cover_file in "$cover_dir"/*.jpg; do
+for cover_file in "$cover_dir"/*.jpg "$cover_dir"/*.jpeg; do
 	#check if the file exists (in case no .jpg files found)
 	if [ ! -f "$cover_file" ]; then
 		echo "no .jpg files found in directory; cannot convert to bmp if nothing is there"
@@ -73,7 +73,11 @@ for cover_file in "$cover_dir"/*.jpg; do
 #	echo "Conversion successful!"
 
 	#define output stego file
-	stego_file="${output_dir}/${base_name}_stego.jpg"
+	if [[ "$cover_file" == *.jpeg ]]; then
+		stego_file="${output_dir}/${base_name}_stego.jpeg"
+	elif [[ "$cover_file" == *.jpg ]]; then
+		stego_file="${output_dir}/${base_name}_stego.jpg"
+	fi
 
 	echo "==="
 	echo "--> embedding $secret_file in $cover_file"
