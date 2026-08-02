@@ -47,43 +47,43 @@ find /home/brontomage20/steghide_stegos_part2 -type f -name '*.jpg' | while read
 done
 
 
-##The below is commented out for now, as I do not know if the system treats "jpeg" and "jpg" as distinct file extensions.
+#The below is commented out for now, as I do not know if the system treats "jpeg" and "jpg" as distinct file extensions.
 
-##process all JPEG files found
-#find <folder location> -type f -name '*.jpeg' | while read -r img; do
-#    	echo "==="
-#    	echo "Processing: $img"
-#    	echo "==="
-#
-#    	#start timing
-#    	start=$(date +%s)
-#
-#    	#get just the file name for the output
-#    	filename=$(basename "$img")
-#
-#    	outfile="./stegcracker_results_part2/${filename}.out"
-#    	logfile="./stegcracker_results_part2/${filename}_result.txt"
-#
-#    	#run stegcracker and save results
-#    	stegcracker "$img" 2>&1 | tee "$logfile"
-#
-#    	#check if a .out file was created (successful crack)
-#    	if [ -f "${img}.out"]; then
-#        	echo "Success! Hidden data extracted to: ${img}.out"
-#        	cp "${img}.out" "$outfile"
-#    	fi
-#
-#    	#calculate and display time
-#	END=$(date +%s)
-#	elapsed=$((END - start))
-#	echo "time taken: ${elapsed} seconds"
-#	echo "==="
-#    	echo ""
-#
-#	#update counters
-#	image_count=$((image_count + 1))
-#	total_image_time=$((total_image_time + elapsed))
-#done
+#process all JPEG files found
+find <folder location> -type f -name '*.jpeg' | while read -r img; do
+    	echo "==="
+    	echo "Processing: $img"
+    	echo "==="
+
+    	#start timing
+    	start=$(date +%s%N)
+
+    	#get just the file name for the output
+    	filename=$(basename "$img")
+
+    	outfile="./stegcracker_results_part2/${filename}.out"
+    	logfile="./stegcracker_results_part2/${filename}_result.txt"
+
+    	#run stegcracker and save results
+    	stegcracker "$img" 2>&1 | tee "$logfile"
+
+    	#check if a .out file was created (successful crack)
+    	if [ -f "${img}.out"]; then
+        	echo "Success! Hidden data extracted to: ${img}.out"
+        	cp "${img}.out" "$outfile"
+    	fi
+
+    	#calculate and display time
+	END=$(date +%s%N)
+	elapsed=$((END - start))
+	echo "time taken: ${elapsed} seconds"
+	echo "==="
+    	echo ""
+
+	#update counters
+	image_count=$((image_count + 1))
+	total_image_time=$((total_image_time + elapsed))
+done
 
 
 
