@@ -3,7 +3,7 @@
 
 
 ##makes temp directory for converted bmp files
-#temp_dir="/home/brontomage20/steghide_temp"
+#temp_dir="/home/brontomage20/steghide_temp_part2"
 #mkdir -p "$temp_dir"
 ##check if temp_dir was made successfully
 #if [ ! -d "$temp_dir" ]; then
@@ -15,8 +15,8 @@
 # Configuration variables
 secret_file="/home/brontomage20/its_a_secret.txt"
 passphrase="debug" #alternatively, choose another word from /home/brontomage20/Wordlists/wordlist_updated_no_num.txt
-cover_dir="/home/brontomage20/cover-images" #directory containing cover files
-output_dir="/home/brontomage20/steghide_stegos" #directory for output files
+cover_dir="/home/brontomage20/Documents/image_set_2" #directory containing cover files
+output_dir="/home/brontomage20/steghide_stegos_part2" #directory for output files
 
 #create directory if it doesnt exist already
 mkdir -p "$output_dir"
@@ -61,7 +61,7 @@ for cover_file in "$cover_dir"/*.jpg; do
 	echo "[$count/$total] processing: $base_name"
 
 #	#convert to bmp
-#	bmp_cover="/home/brontomage20/steghide_temp/${base_name}.bmp"
+#	bmp_cover="/home/brontomage20/steghide_temp_part2/${base_name}.bmp"
 #	echo "-> converting jpg to bmp"
 #	convert "$cover_file" "$bmp_cover"
 #

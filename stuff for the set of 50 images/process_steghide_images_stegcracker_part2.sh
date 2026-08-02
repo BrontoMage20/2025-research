@@ -1,5 +1,5 @@
 # Create results directory
-mkdir -p stegcracker_steghide_results
+mkdir -p stegcracker_steghide_results_part2
 
 #track total time and count
 script_start=$(date +%s%N)
@@ -8,7 +8,7 @@ total_image_time=0
 
 
 #process all JPG files found
-find /home/brontomage20/steghide_stegos -type f -name '*.jpg' | while read -r img; do
+find /home/brontomage20/steghide_stegos_part2 -type f -name '*.jpg' | while read -r img; do
     	echo "==="
     	echo "Processing: $img"
     	echo "==="
@@ -19,8 +19,8 @@ find /home/brontomage20/steghide_stegos -type f -name '*.jpg' | while read -r im
     	#get just the file name for the output
     	filename=$(basename "$img" | sed 's/\.[^.]*$//')
     
-    	outfile="./stegcracker_steghide_results/${filename}.out"
-    	logfile="./stegcracker_steghide_results/${filename}_result.txt"
+    	outfile="./stegcracker_steghide_results_part2/${filename}.out"
+    	logfile="./stegcracker_steghide_results_part2/${filename}_result.txt"
     
     	#run stegcracker and save results
     	stegcracker "$img" /home/brontomage20/Wordlists/wordlist_updated_no_num.txt 2>&1 | tee "$logfile"
@@ -61,8 +61,8 @@ done
 #    	#get just the file name for the output
 #    	filename=$(basename "$img")
 #
-#    	outfile="./stegcracker_results/${filename}.out"
-#    	logfile="./stegcracker_results/${filename}_result.txt"
+#    	outfile="./stegcracker_results_part2/${filename}.out"
+#    	logfile="./stegcracker_results_part2/${filename}_result.txt"
 #
 #    	#run stegcracker and save results
 #    	stegcracker "$img" 2>&1 | tee "$logfile"
@@ -99,8 +99,8 @@ done
 #    	#get just the file name for the output
 #   	filename=$(basename "$img")
 #
-#   	outfile="./stegcracker_results/${filename}.out"
-#   	logfile="./stegcracker_results/${filename}_result.txt"
+#   	outfile="./stegcracker_results_part2/${filename}.out"
+#   	logfile="./stegcracker_results_part2/${filename}_result.txt"
 #
 #   	#run stegcracker and save results
 #   	stegcracker "$img" 2>&1 | tee "$logfile"
@@ -153,7 +153,7 @@ echo ""
 echo ""
 echo "summary of successful extractions:"
 successful=0
-for file in ./stegcracker_steghide_results/*.out; do
+for file in ./stegcracker_steghide_results_part2/*.out; do
 	if [ -f "$file" ] && [ -s "$file" ]; then
 		echo "[*checkmark*] $file"
 		successful=$((successful + 1))

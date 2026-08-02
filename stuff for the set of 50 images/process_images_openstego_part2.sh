@@ -4,8 +4,8 @@
 
 #configuration variables
 password="debug" #password used for embedding
-stego_dir="/home/brontomage20/openstego_stegos" #directory containing the stego files
-output_dir="/home/brontomage20/openstego_extracted" #directory for extracted files
+stego_dir="/home/brontomage20/openstego_stegos_part2" #directory containing the stego files
+output_dir="/home/brontomage20/openstego_extracted_part2" #directory for extracted files
 
 #create directory if it doesnt exist
 mkdir -p "$output_dir"
