@@ -34,7 +34,7 @@ image_count="$count"
 total_image_time=0
 
 # This loop processes every .bmp file in the cover-images directory.
-for cover_file in "$cover_dir"/*.jpg; do
+for cover_file in "$cover_dir"/*.jpg "$cover_dir"/*.jpeg; do
 	# Check if the file exists (in case no .jpg files found)
 	if [ ! -f "$cover_file" ]; then
 		echo "No .jpg files found in cover-images directory (and as such cannot convert any to bmp)."
