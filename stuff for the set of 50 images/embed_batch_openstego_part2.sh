@@ -26,7 +26,8 @@ echo "Starting openstego embedding process..."
 count=0
 success=0
 failed=0
-total=$(ls "$cover_dir"/*.jpg 2>/dev/null | wc -l)
+shopt -s extglob
+total=$(ls "$cover_dir"/*.@(jpg|jpeg) 2>/dev/null | wc -l)
 
 #track total and time count
 script_start=$(date +%s%N)
