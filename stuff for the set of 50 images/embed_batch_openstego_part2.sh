@@ -85,7 +85,7 @@ for cover_file in "$cover_dir"/*.jpg; do
     #calculate and display time
     END=$(date +%s)
     elapsed=$((END - START))
-    echo "time taken: $(elapsed) seconds"
+    echo "time taken: $elapsed seconds"
     echo "==="
     echo ""
 
