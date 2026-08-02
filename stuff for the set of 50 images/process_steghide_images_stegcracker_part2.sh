@@ -1,5 +1,5 @@
 # Create results directory
-mkdir -p stegcracker_steghide_part2_results
+mkdir -p stegcracker_steghide_results
 
 #track total time and count
 script_start=$(date +%s%N)
@@ -8,7 +8,7 @@ total_image_time=0
 
 
 #process all JPG files found
-find /home/brontomage20/steghide_part2_stegos -type f -name '*.jpg' | while read -r img; do
+find /home/brontomage20/steghide_stegos -type f -name '*.jpg' | while read -r img; do
     	echo "==="
     	echo "Processing: $img"
     	echo "==="
@@ -19,8 +19,8 @@ find /home/brontomage20/steghide_part2_stegos -type f -name '*.jpg' | while read
     	#get just the file name for the output
     	filename=$(basename "$img" | sed 's/\.[^.]*$//')
     
-    	outfile="./stegcracker_steghide_part2_results/${filename}.out"
-    	logfile="./stegcracker_steghide_part2_results/${filename}_result.txt"
+    	outfile="./stegcracker_steghide_results/${filename}.out"
+    	logfile="./stegcracker_steghide_results/${filename}_result.txt"
     
     	#run stegcracker and save results
     	stegcracker "$img" /home/brontomage20/Wordlists/wordlist_updated_no_num.txt 2>&1 | tee "$logfile"
@@ -32,6 +32,7 @@ find /home/brontomage20/steghide_part2_stegos -type f -name '*.jpg' | while read
     	if [ -f "$stegcracker_output" ]; then
         	echo "Success! Hidden data extracted to: ${filename}.out"
         	cp "$stegcracker_output" "$outfile"
+		rm "$stegcracker_output"
     	fi
 	#calculate and display time
 	END=$(date +%s%N)
@@ -60,8 +61,8 @@ done
 #    	#get just the file name for the output
 #    	filename=$(basename "$img")
 #
-#    	outfile="./stegcracker_part2_results/${filename}.out"
-#    	logfile="./stegcracker_part2_results/${filename}_result.txt"
+#    	outfile="./stegcracker_results/${filename}.out"
+#    	logfile="./stegcracker_results/${filename}_result.txt"
 #
 #    	#run stegcracker and save results
 #    	stegcracker "$img" 2>&1 | tee "$logfile"
@@ -98,8 +99,8 @@ done
 #    	#get just the file name for the output
 #   	filename=$(basename "$img")
 #
-#   	outfile="./stegcracker_part2_results/${filename}.out"
-#   	logfile="./stegcracker_part2_results/${filename}_result.txt"
+#   	outfile="./stegcracker_results/${filename}.out"
+#   	logfile="./stegcracker_results/${filename}_result.txt"
 #
 #   	#run stegcracker and save results
 #   	stegcracker "$img" 2>&1 | tee "$logfile"
@@ -139,7 +140,7 @@ echo "============================"
 echo "Processing complete! Check results in:"
 echo "home directory"
 echo "Summary of successful extractions:"
-ls -1 stegcracker_steghide_part2_results/*.out 2>/dev/null | while read file; do
+ls -1 stegcracker_steghide_results/*.out 2>/dev/null | while read file; do
 	echo "$file"
 done
 echo "time statistics:"

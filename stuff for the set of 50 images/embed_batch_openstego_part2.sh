@@ -1,17 +1,17 @@
 # Makes the directory for the stego images
-mkdir -p /home/brontomage20/openstego_part2_stegos
+mkdir -p /home/brontomage20/openstego_stegos_part2
 
 
 # Create a temporary directory for converted bmp files
-temp_dir="/home/brontomage20/openstego_part2_temp"
+temp_dir="/home/brontomage20/openstego_temp_part2"
 
 mkdir -p "$temp_dir"
 
 # Check if the temp directory was created successfully
 if [ ! -d "$temp_dir" ]; then
-    echo "Error: failed to create temporary directory"
-    exit 1
-        #note for future programs: "exit 0" = "command success" and "exit n" = "command error", where n is nonzero.
+	echo "Error: failed to create temporary directory"
+	exit 1
+		#note for future programs: "exit 0" = "command success" and "exit n" = "command error", where n is nonzero.
 fi
 
 #config var.s
@@ -26,91 +26,90 @@ echo "Starting openstego embedding process..."
 count=0
 success=0
 failed=0
-total=$(ls -1 "$cover_dir"/*.jpg 2>/dev/null | wc -l)
+total=$(ls "$cover_dir"/*.jpg 2>/dev/null | wc -l)
 
 #track total and time count
 script_start=$(date +%s%N)
-image_count="count"
+image_count="$count"
 total_image_time=0
 
-# This loop processes every .bmp fie in the cover-images directory.
+# This loop processes every .bmp file in the cover-images directory.
 for cover_file in "$cover_dir"/*.jpg; do
-    # Check if the file exists (in case no .jpg files found)
-    if [ ! -f "$cover_file" ]; then
-        echo "No .jpg files found in cover-images directory (and as such cannot convert any to bmp)."
+	# Check if the file exists (in case no .jpg files found)
+	if [ ! -f "$cover_file" ]; then
+		echo "No .jpg files found in cover-images directory (and as such cannot convert any to bmp)."
+		break
+	fi
 
-        break
-    fi
+	# Increment counter
+	count=$((count + 1))
+	base_name=$(basename "$cover_file" .jpg)
+	echo "[$count/$total] Processing: $base_name"
 
-    # Increment counter
-    count=$((count + 1))
+	# Convert JPG to BMP
+	bmp_cover="/home/brontomage20/openstego_temp_part2/${base_name}.BMP"
+	echo "-> Converting JPG to BMP"
+	convert "$cover_file" "$bmp_cover"
+	
+	if [ $? -ne 0 ]; then
+		echo "Failed to convert $cover_file."
+		continue #tells the program to skip the rest of the current for loop iteration (i.e. the current image), and move to the next.
+	fi
+	echo "Conversion successful!"
 
-    base_name=$(basename "$cover_file" .jpg)
-    echo "[$count/$total] Processing: $base_name"
+	# Define the output (stego) file name.
+	stego_file="/home/brontomage20/openstego_stegos_part2/${base_name}_stego.bmp"
 
-    # Convert JPG to BMP
-    bmp_cover="/home/brontomage20/openstego_part2_temp/${base_name}.bmp"
-    echo "-> Converting JPG to BMP"
-    convert "$cover_file" "$bmp_cover"
+	# Define the password being used - make sure to pull from the updated wordlist (see wordlist_updated_no_num.txt for said list; located within the Wordlists folder (within the home folder))
+	#password="<password being used>" # will be filled out later	
+	password="debug"
 
-    if [ $? -ne 0 ]; then
-        echo "Failed to convert $cover_file."
-        continue #tells the program to skip the rest of the current for loop iteration (i.e. the current image), and move to the next.
-    fi
-    echo "Conversion successful!"
+	echo "Embedding into $bmp_cover -> $stego_file"
 
-    # Define the output (stego) file name.
-    stego_file="/home/brontomage20/openstego_part2_stegos/${base_name}_stego.bmp"
+	#start timing the individual embed
+	START=$(date +%s%N)
 
-    # Define the password being used - make sure to pull from the updated wordlist (see wordlist_updated_no_num.txt for said list; located within the Wordlists folder (within the home folder))
-    #password="<password being used>" # will be filled out later
-    password="debug"
+	# Run the OpenStego command (note that "-mf"="--mesagefile", "-cf"="--coverfile", "-sf"="--stegofile", and "-E"="--noencrypt")
+	openstego embed -mf "$secret_file" -cf "$bmp_cover" -sf "$stego_file" -p "$password" -e
+	
+	if [ $? -eq 0 ]; then
+		echo "Successfully created $stego_file"
+		success=$((success + 1))
+	else
+		echo "Failed to create $stego_file"
+		failed=$((failed + 1))
+	fi
 
-    echo "Embedding into $bmp_cover -> $stego_file"
+	#calculate and display time
+	END=$(date +%s%N)	
+	elapsed=$(( (END - START) / 1000000 ))
+	echo "time taken: ${elapsed} milliseconds"
+	echo "==="
+	echo ""
 
-    #start timing the individual embed
-    START=$(date +%s)
-
-    # Run the OpenStego command (note that "-mf"="--messagefile", "-cf"="--coverfile", "-sf"="--stegofile", and "-E"="--noencrypt")
-    openstego embed -mf "$secret_file" -cf "$bmp_cover" -sf "$stego_file" -p "$password" -e
-
-    if [ $? -eq 0 ]; then
-        echo "Successfully created $stego_file"
-        success=$((success + 1))
-    else
-        echo "Failed to create $stego_file"
-        failed=$((failed + 1))
-    fi
-
-    #calculate and display time
-    END=$(date +%s)
-    elapsed=$((END - START))
-    echo "time taken: $elapsed seconds"
-    echo "==="
-    echo ""
-
-    #update counters
-    image_count="$count"
-    total_image_time=$((total_image_time + elapsed))
+	#update counters
+	image_count="$count"
+	total_image_time=$((total_image_time + elapsed))
 done
 
 # Clean up temporary BMP files
 #echo "Cleaning up temporary files..."
-#rm -rf /home/brontomage20/openstego_part2_temp
+#rm -rf /home/brontomage20/openstego_temp_part2
 
 #calculate total time and average
-script_end=$(date +%s)
-total_time=$((script_end - script_start))
+script_end=$(date +%s%N)
+total_time=$(((script_end - script_start) / 1000000))
 
-if [ $image_count -gt 0 ]; then
-    average_time=$((total_image_time / image_count))
+
+if [ "$image_count" -gt 0 ]; then
+	average_time=$((total_image_time / image_count))
 else
-    average_time=0
+	average_time=0
 fi
 
-echo "Embedding process complete for all files."
+echo "Embedding complete for all files."
 
-echo "Output location: /home/brontomage20/openstego_part2_stegos"
+echo "Output location: /home/brontomage20/openstego_stegos_part2"
 echo "Total files processed: $count"
 
 
@@ -119,10 +118,10 @@ echo "embedding complete!"
 echo ""
 echo "summary:"
 echo " - total files processed: $count"
-echo " - successful: $successful"
+echo " - successful: $success"
 echo " - failed: $failed"
 echo ""
 echo "time statistics:"
-echo " - total processing time: ${total_time} seconds ($((total_time / 60)) minutes)"
-echo " - average time per image: ${average_time} seconds"
+echo " - total processing time: ${total_time} milliseconds ($((total_time / 60)) mintues/1000000)"
+echo " - average time per image: ${average_time} milliseconds"
 echo "========"

@@ -2,8 +2,8 @@
 
 #configuration variables
 passphrase="debug" #password used during embedding
-stego_dir="/home/brontomage20/steghide_part2_stegos" #directory containing stego files
-output_dir="/home/brontomage20/steghide_part2_extracted" #directory for extracted files
+stego_dir="/home/brontomage20/steghide_stegos" #directory containing stego files
+output_dir="/home/brontomage20/steghide_extracted" #directory for extracted files
 
 #create output directory if it doesnt exist
 mkdir -p "$output_dir"
@@ -25,7 +25,7 @@ echo "found $total stego files to process"
 echo ""
 
 #track total time and count
-script_start=$(date +%s)
+script_start=$(date +%s%N)
 image_count="$count"
 total_image_time=0
 
@@ -41,7 +41,7 @@ for stego_file in "$stego_dir"/*.jpg; do
 	count=$((count + 1))
 
 	#start timing this iteration
-	START=$(date +%s)
+	START=$(date +%s%N)
 
 	#get the base filename
 	base_name=$(basename "$stego_file" .jpg)
@@ -71,9 +71,9 @@ for stego_file in "$stego_dir"/*.jpg; do
 
 	echo "==="
 	#calculate and display time
-	END=$(date +%s)
-	elapsed=$((END - START))
-	echo "time taken: ${elapsed} seconds"
+	END=$(date +%s%N)
+	elapsed=$(((END - START) / 1000000))
+	echo "time taken: ${elapsed} milliseconds"
 	echo "==="
 	echo ""
 
@@ -83,8 +83,8 @@ for stego_file in "$stego_dir"/*.jpg; do
 done
 
 #calculate total time and average
-script_end=$(date +%s)
-total_time=$((script_end - script_start))
+script_end=$(date +%s%N)
+total_time=$(((script_end - script_start) / 1000000))
 
 if [ $image_count -gt 0 ]; then
 	average_time=$((total_image_time / image_count))
@@ -101,8 +101,8 @@ echo " - successful: $success"
 echo " - failed: $failed"
 echo ""
 echo "time statistics:"
-echo " - total processing time: ${total_time} seconds ($((total_time / 60)) minutes"
-echo " - average time per image: ${average_time} seconds"
+echo " - total processing time: ${total_time} milliseconds ($((total_time / 60)) minutes/1000000"
+echo " - average time per image: ${average_time} milliseconds"
 echo ""
 echo "output directory: $output_dir"
 echo "========

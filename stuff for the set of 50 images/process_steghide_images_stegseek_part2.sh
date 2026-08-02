@@ -4,7 +4,7 @@
 # cd ~/Desktop/chal/stegano/archive || exit
 
 # Create results directory in the current location
-mkdir -p ./stegseek_steghide_part2_results
+mkdir -p ./stegseek_steghide_results
 
 # Make sure rockyou.txt is decompressed
 if [ -f /usr/share/wordlists/rockyou.txt.gz ]; then
@@ -30,8 +30,8 @@ find /home/brontomage20/steghide_stegos -type f -name '*.jpg' | while read -r im
 	# Get just the file name for the output
 	filename=$(basename "$img")
 	
-	outfile="./stegseek_steghide_part2_results/${filename}.out"
-	logfile="./stegseek_steghide_part2_results/${filename}_result.txt"
+	outfile="./stegseek_steghide_results/${filename}.out"
+	logfile="./stegseek_steghide_results/${filename}_result.txt"
 
 	# Run stegseek and save results
 	stegseek "$img" /home/brontomage20/Wordlists/wordlist_updated_no_num.txt "$outfile" 2>&1 | tee "$logfile"
@@ -66,8 +66,8 @@ done
 #	# Get just the file name for the output
 #	filename=$(basename "$img")
 #
-#	outfile="./stegseek_part2_results/${filename}.out"
-#	logfile="./stegseek_part2_results/${filename}_result.txt"
+#	outfile="./stegseek_results/${filename}.out"
+#	logfile="./stegseek_results/${filename}_result.txt"
 #
 #	# Run stegseek and save results
 #	stegseek "$img" /usr/share/wordlists/rockyou.txt "$outfile" 2>&1 | tee "$logfile"
@@ -98,8 +98,8 @@ done
 #	# Get just the file name for the output
 #	filename=$(basename "$img")
 #
-#	outfile="./stegseek_part2_results/${filename}.out"
-#	logfile="./stegseek_part2_results/${filename}_result.txt"
+#	outfile="./stegseek_results/${filename}.out"
+#	logfile="./stegseek_results/${filename}_result.txt"
 #
 #	# Run stegseek and save results
 #	stegseek "$img" /usr/share/wordlists/rockyou.txt "$outfile" 2>&1 | tee "$logfile"
@@ -129,7 +129,7 @@ fi
 
 echo "============================"
 echo "Processing complete! Check results in:"
-echo "~/Desktop/chal/stegano/archive/stegseek_steghide_part2_results"
+echo "~/Desktop/chal/stegano/archive/stegseek_steghide_results"
 echo ""
 echo "Statistics:"
 echo " - Total images processed: ${IMAGE_COUNT}"
@@ -160,7 +160,7 @@ fi
 
 #The following was initially used on 11/28/25; please keep the below in the case that the above does NOT work. -Liam
 
-#ls -1 stegseek_part2_results/*.out 2>/dev/null | while read file; do
+#ls -1 stegseek_results/*.out 2>/dev/null | while read file; do
 #	echo "$file"
 #done
 #echo "============================"
