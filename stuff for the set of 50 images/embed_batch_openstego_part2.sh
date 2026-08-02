@@ -1,9 +1,9 @@
 # Makes the directory for the stego images
-mkdir -p /home/brontomage20/openstego_stegos_part2
+mkdir -p /home/brontomage20/openstego_part2_stegos
 
 
 # Create a temporary directory for converted bmp files
-temp_dir="/home/brontomage20/openstego_temp_part2"
+temp_dir="/home/brontomage20/openstego_part2_temp"
 
 mkdir -p "$temp_dir"
 
@@ -49,7 +49,7 @@ for cover_file in "$cover_dir"/*.jpg; do
     echo "[$count/$total] Processing: $base_name"
 
     # Convert JPG to BMP
-    bmp_cover="/home/brontomage20/openstego_temp_part2/${base_name}.bmp"
+    bmp_cover="/home/brontomage20/openstego_part2_temp/${base_name}.bmp"
     echo "-> Converting JPG to BMP"
     convert "$cover_file" "$bmp_cover"
 
@@ -60,7 +60,7 @@ for cover_file in "$cover_dir"/*.jpg; do
     echo "Conversion successful!"
 
     # Define the output (stego) file name.
-    stego_file="/home/brontomage20/openstego_stegos_part2/${base_name}_stego.bmp"
+    stego_file="/home/brontomage20/openstego_part2_stegos/${base_name}_stego.bmp"
 
     # Define the password being used - make sure to pull from the updated wordlist (see wordlist_updated_no_num.txt for said list; located within the Wordlists folder (within the home folder))
     #password="<password being used>" # will be filled out later
@@ -96,7 +96,7 @@ done
 
 # Clean up temporary BMP files
 #echo "Cleaning up temporary files..."
-#rm -rf /home/brontomage20/openstego_temp_part2
+#rm -rf /home/brontomage20/openstego_part2_temp
 
 #calculate total time and average
 script_end=$(date +%s)
@@ -110,7 +110,7 @@ fi
 
 echo "Embedding process complete for all files."
 
-echo "Output location: /home/brontomage20/openstego_stegos_part2"
+echo "Output location: /home/brontomage20/openstego_part2_stegos"
 echo "Total files processed: $count"
 
 

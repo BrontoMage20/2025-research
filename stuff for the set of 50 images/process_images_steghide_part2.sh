@@ -2,8 +2,8 @@
 
 #configuration variables
 passphrase="debug" #password used during embedding
-stego_dir="/home/brontomage20/steghide_stegos_part2" #directory containing stego files
-output_dir="/home/brontomage20/steghide_extracted_part2" #directory for extracted files
+stego_dir="/home/brontomage20/steghide_part2_stegos" #directory containing stego files
+output_dir="/home/brontomage20/steghide_part2_extracted" #directory for extracted files
 
 #create output directory if it doesnt exist
 mkdir -p "$output_dir"

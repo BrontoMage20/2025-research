@@ -4,7 +4,7 @@
 secret_file="/home/brontomage20/its_a_secret.txt"
 passphrase="debug" #alternatively, choose another word from /home/brontomage20/Wordlists/wordlist_updated_no_num.txt
 cover_dir="/home/brontomage20/Documents/image_set_2" #directory containing cover files
-output_dir="/home/brontomage20/steghide_stegos_part2" #directory for output files
+output_dir="/home/brontomage20/steghide_part2_stegos" #directory for output files
 
 #create directory if it doesnt exist already
 mkdir -p "$output_dir"
