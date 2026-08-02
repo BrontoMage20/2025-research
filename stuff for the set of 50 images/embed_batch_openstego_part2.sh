@@ -43,7 +43,11 @@ for cover_file in "$cover_dir"/*.jpg "$cover_dir"/*.jpeg; do
 
 	# Increment counter
 	count=$((count + 1))
-	base_name=$(basename "$cover_file" .jpg)
+	if [[ "$cover_file" == *.jpeg ]]; then
+		base_name=$(basename "$cover_file" .jpeg)
+	elif [[ "$cover_file" == *.jpg ]]; then
+		base_name=$(basename "$cover_file" .jpg)
+	fi
 	echo "[$count/$total] Processing: $base_name"
 
 	# Convert JPG to BMP
