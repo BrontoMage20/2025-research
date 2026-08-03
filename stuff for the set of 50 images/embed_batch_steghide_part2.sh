@@ -33,7 +33,7 @@ echo ""
 count=0
 success=0
 failed=0
-total=$(ls "$cover_dir"/*.@jpg "$cover_dir"/*.jpeg 2>/dev/null | wc -l)
+total=$(ls "$cover_dir"/*.jpg "$cover_dir"/*.jpeg 2>/dev/null | wc -l)
 
 echo "found $total jpg files to process!"
 echo ""
