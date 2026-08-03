@@ -14,7 +14,7 @@ find /home/brontomage20/steghide_stegos_part2 -type f -name '*.jpg' | while read
     	echo "==="
     
     	#start timing
-    	start=$(date +%s%N)
+    	#start=$(date +%s%N)
  
     	#get just the file name for the output
     	filename=$(basename "$img" | sed 's/\.[^.]*$//')
@@ -35,11 +35,11 @@ find /home/brontomage20/steghide_stegos_part2 -type f -name '*.jpg' | while read
 		rm "$stegcracker_output"
     	fi
 	#calculate and display time
-	END=$(date +%s%N)
-	elapsed=$(((END - start) / 1000000))
-	echo "time taken: ${elapsed} milliseconds"
-	echo "==="
-    	echo ""
+	#END=$(date +%s%N)
+	#elapsed=$(((END - start) / 1000000))
+	#echo "time taken: ${elapsed} milliseconds"
+	#echo "==="
+    #	echo ""
 
 	#update counters
 	image_count=$((image_count + 1))
@@ -48,6 +48,7 @@ done
 
 
 #The below is commented out for now, as I do not know if the system treats "jpeg" and "jpg" as distinct file extensions.
+		#Update from August of 2026 Liam: yes. yes, it does.
 
 #process all JPEG files found
 find <folder location> -type f -name '*.jpeg' | while read -r img; do
@@ -56,7 +57,7 @@ find <folder location> -type f -name '*.jpeg' | while read -r img; do
     	echo "==="
 
     	#start timing
-    	start=$(date +%s%N)
+    	#start=$(date +%s%N)
 
     	#get just the file name for the output
     	filename=$(basename "$img")
@@ -74,11 +75,11 @@ find <folder location> -type f -name '*.jpeg' | while read -r img; do
     	fi
 
     	#calculate and display time
-	END=$(date +%s%N)
-	elapsed=$((END - start))
-	echo "time taken: ${elapsed} seconds"
-	echo "==="
-    	echo ""
+	#END=$(date +%s%N)
+	#elapsed=$((END - start))
+	#echo "time taken: ${elapsed} seconds"
+	#echo "==="
+    #	echo ""
 
 	#update counters
 	image_count=$((image_count + 1))
