@@ -25,7 +25,7 @@ find /home/brontomage20/steghide_stegos_part2 -type f -name '*.jpg' | while read
 	echo "============="
 	
 	# Start timing
-	START=$(date +%s%N)
+	# START=$(date +%s%N)
 
 	# Get just the file name for the output
 	filename=$(basename "$img")
@@ -37,11 +37,11 @@ find /home/brontomage20/steghide_stegos_part2 -type f -name '*.jpg' | while read
 	stegseek "$img" /home/brontomage20/Wordlists/wordlist_updated_no_num.txt "$outfile" 2>&1 | tee "$logfile"
 	
 	# Calculate and display time
-	END=$(date +%s%N)
-	ELAPSED=$(((END - START) / 1000000))
-	echo "Time taken: ${ELAPSED} milliseconds."
-	echo "==="
-	echo ""
+	# END=$(date +%s%N)
+	# ELAPSED=$(((END - START) / 1000000))
+	# echo "Time taken: ${ELAPSED} milliseconds."
+	# echo "==="
+	# echo ""
 
 	# Update counters
 	IMAGE_COUNT=$((IMAGE_COUNT + 1))
@@ -50,39 +50,39 @@ find /home/brontomage20/steghide_stegos_part2 -type f -name '*.jpg' | while read
 done
 
 
-##The following has ben commented out, as I am not sure if the extension jpeg is necessarily distinct from jpg.
+#The following has ben commented out, as I am not sure if the extension jpeg is necessarily distinct from jpg.
 
 
-##Process all JPEG files.
-#echo "Processing: JPEG files."
-#find . -type f -name '*.jpeg' | while read -r img; do
-#	echo "============="
-#	echo "Processing: $img"
-#	echo "============="
-#
-#	# Start timing
-#	START=$(date +%s)
-#	
-#	# Get just the file name for the output
-#	filename=$(basename "$img")
-#
-#	outfile="./stegseek_results_part2/${filename}.out"
-#	logfile="./stegseek_results_part2/${filename}_result.txt"
-#
-#	# Run stegseek and save results
-#	stegseek "$img" /usr/share/wordlists/rockyou.txt "$outfile" 2>&1 | tee "$logfile"
-#
-#	# Calculate and display time
-#	END=$(date +%s)
-#	ELAPSED=$((END - START))
-#	echo "Time taken: ${ELAPSED} seconds."
-#	echo "==="
-#	echo ""
-#
-#	# Update counters
-#	IMAGE_COUNT=$((IMAGE_COUNT + 1))
-#	TOTAL_IMAGE_TIME=$((TOTAL_IMAGE_TIME + ELAPSED))
-#done
+#Process all JPEG files.
+echo "Processing: JPEG files."
+find . -type f -name '*.jpeg' | while read -r img; do
+	echo "============="
+	echo "Processing: $img"
+	echo "============="
+
+	# Start timing
+	# START=$(date +%s)
+	
+	# Get just the file name for the output
+	filename=$(basename "$img")
+
+	outfile="./stegseek_results_part2/${filename}.out"
+	logfile="./stegseek_results_part2/${filename}_result.txt"
+
+	# Run stegseek and save results
+	stegseek "$img" /usr/share/wordlists/rockyou.txt "$outfile" 2>&1 | tee "$logfile"
+
+	# Calculate and display time
+	# END=$(date +%s)
+	# ELAPSED=$((END - START))
+	# echo "Time taken: ${ELAPSED} seconds."
+	# echo "==="
+	# echo ""
+
+	# Update counters
+	IMAGE_COUNT=$((IMAGE_COUNT + 1))
+	TOTAL_IMAGE_TIME=$((TOTAL_IMAGE_TIME + ELAPSED))
+done
 
 
 ##Process all BMP files.
