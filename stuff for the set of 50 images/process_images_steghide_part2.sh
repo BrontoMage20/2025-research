@@ -19,8 +19,7 @@ echo ""
 count=0
 success=0
 failed=0
-shopt -s extglob
-total=$(ls "$cover_dir"/*.@(jpg|jpeg) 2>/dev/null | wc -l)
+total=$(ls "$output_dir"/*.jpg "$output_dir"/*.jpeg 2>/dev/null | wc -l)
 
 echo "found $total stego files to process"
 echo ""
@@ -34,7 +33,7 @@ total_image_time=0
 for stego_file in "$stego_dir"/*.jpg "$stego_dir"/*.jpeg; do
 	#check if the file exists
 	if [ ! -f "$stego_file" ]; then
-		echo "no .jpg files found in stego directory."
+		echo "no .jpg or files found in stego directory."
 		break
 	fi
 
@@ -45,11 +44,12 @@ for stego_file in "$stego_dir"/*.jpg "$stego_dir"/*.jpeg; do
 	START=$(date +%s%N)
 
 	#get the base filename
-	if [[ "$stego_file" == *.jpeg ]]; then
-		base_name=$(basename "$stego_file" .jpeg)
-	elif [[ "$stego_file" == *.jpg ]]; then
-		base_name=$(basename "$stego_file" .jpg)
-	fi
+	# if [[ "$stego_file" == *.jpeg ]]; then
+	# 	base_name=$(basename "$stego_file" .jpeg)
+	# elif [[ "$stego_file" == *.jpg ]]; then
+	# 	base_name=$(basename "$stego_file" .jpg)
+	# fi
+	base_name="${stego_file##*/}"; base_name="${base_name%.jp*g}"
 
 	#define output file for extracted data
 	extracted_file="$output_dir/${base_name}_extracted.txt"
