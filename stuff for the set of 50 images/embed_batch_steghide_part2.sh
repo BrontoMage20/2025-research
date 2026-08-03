@@ -33,8 +33,7 @@ echo ""
 count=0
 success=0
 failed=0
-shopt -s extglob
-total=$(ls "$cover_dir"/*.@(jpg|jpeg) 2>/dev/null | wc -l)
+total=$(ls "$cover_dir"/*.@jpg "$cover_dir"/*.jpeg 2>/dev/null | wc -l)
 
 echo "found $total jpg files to process!"
 echo ""
@@ -58,11 +57,12 @@ for cover_file in "$cover_dir"/*.jpg "$cover_dir"/*.jpeg; do
 	START=$(date +%s%N)
 
 	#get the base filename w/o path and extension
-	if [[ "$cover_file" == *.jpeg ]]; then
-		base_name=$(basename "$cover_file" .jpeg)
-	elif [[ "$cover_file" == *.jpg ]]; then
-		base_name=$(basename "$cover_file" .jpg)
-	fi
+	# if [[ "$cover_file" == *.jpeg ]]; then
+	# 	base_name=$(basename "$cover_file" .jpeg)
+	# elif [[ "$cover_file" == *.jpg ]]; then
+	# 	base_name=$(basename "$cover_file" .jpg)
+	# fi
+	base_name="${cover_file##*/}"; base_name="${base_name%.jp*g}"
 	echo "[$count/$total] processing: $base_name"
 
 #	#convert to bmp
