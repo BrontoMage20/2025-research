@@ -4,7 +4,7 @@
 # cd ~/Desktop/chal/stegano/archive || exit
 
 # Create results directory in the current location
-mkdir -p ./stegseek_steghide_results_part2
+mkdir -p /home/brontomage20/stegseek_steghide_results_part2
 
 # Make sure rockyou.txt is decompressed
 if [ -f /usr/share/wordlists/rockyou.txt.gz ]; then
