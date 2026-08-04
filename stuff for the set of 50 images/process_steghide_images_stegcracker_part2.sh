@@ -67,7 +67,7 @@ find /home/brontomage20/steghide_stegos_part2 -type f -name '*.jpeg' | while rea
     	logfile="/home/brontomage20/stegcracker_results_part2/${filename}_result.txt"
 
     	#run stegcracker and save results
-    	stegcracker "$img" 2>&1 | tee "$logfile"
+    	stegcracker "$img" /home/brontomage20/Wordlists/wordlist_updated_no_num.txt 2>&1 | tee "$logfile"
 
     	#check if a .out file was created (successful crack)
     	if [ -f "${img}.out"]; then
