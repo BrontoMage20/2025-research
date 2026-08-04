@@ -4,7 +4,7 @@ mkdir -p /home/brontomage20/stegcracker_steghide_results_part2
 #track total time and count
 script_start=$(date +%s%N)
 #image_count=0
-total=$(find /home/brontomage20/steghide_stegos_part2 -type f ( -iname '.jpg' -o -iname '.jpeg' ) | wc -l)
+total=$(find /home/brontomage20/steghide_stegos_part2 -type f \( -iname '*.jpg' -o -iname '*.jpeg' \) | wc -l)
 total_image_time=0
 
 
