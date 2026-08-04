@@ -75,8 +75,8 @@ find /home/brontomage20/steghide_stegos_part2 -type f -name '*.jpeg' | while rea
 
 	# Calculate and display time
 	END=$(date +%s%N)
-	ELAPSED=$((END - START))
-	echo "Time taken: ${ELAPSED} seconds."
+	ELAPSED=$(((END - START) / 1000000))
+	echo "Time taken: ${ELAPSED} milliseconds."
 	echo "==="
 	echo ""
 
