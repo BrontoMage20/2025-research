@@ -30,8 +30,8 @@ find /home/brontomage20/steghide_stegos_part2 -type f -name '*.jpg' | while read
 	# Get just the file name for the output
 	filename=$(basename "$img")
 	
-	outfile="./stegseek_steghide_results_part2/${filename}.out"
-	logfile="./stegseek_steghide_results_part2/${filename}_result.txt"
+	outfile="/home/brontomage20/stegseek_steghide_results_part2/${filename}.out"
+	logfile="/home/brontomage20/stegseek_steghide_results_part2/${filename}_result.txt"
 
 	# Run stegseek and save results
 	stegseek "$img" /home/brontomage20/Wordlists/wordlist_updated_no_num.txt "$outfile" 2>&1 | tee "$logfile"
@@ -66,8 +66,8 @@ find . -type f -name '*.jpeg' | while read -r img; do
 	# Get just the file name for the output
 	filename=$(basename "$img")
 
-	outfile="./stegseek_results_part2/${filename}.out"
-	logfile="./stegseek_results_part2/${filename}_result.txt"
+	outfile="/home/brontomage20/stegseek_results_part2/${filename}.out"
+	logfile="/home/brontomage20/stegseek_results_part2/${filename}_result.txt"
 
 	# Run stegseek and save results
 	stegseek "$img" /usr/share/wordlists/rockyou.txt "$outfile" 2>&1 | tee "$logfile"
