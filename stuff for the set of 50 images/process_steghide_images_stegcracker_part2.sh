@@ -61,24 +61,27 @@ find /home/brontomage20/steghide_stegos_part2 -type f -name '*.jpeg' | while rea
     	start=$(date +%s%N)
 
     	#get just the file name for the output
-    	filename=$(basename "$img")
+    	filename=$(basename "$img" | sed 's/\.[^.]*$//')
 
-    	outfile="/home/brontomage20/stegcracker_results_part2/${filename}.out"
-    	logfile="/home/brontomage20/stegcracker_results_part2/${filename}_result.txt"
+    	outfile="/home/brontomage20/stegcracker_steghide_results_part2/${filename}.out"
+    	logfile="/home/brontomage20/stegcracker_steghide_results_part2/${filename}_result.txt"
 
     	#run stegcracker and save results
     	stegcracker "$img" /home/brontomage20/Wordlists/wordlist_updated_no_num.txt 2>&1 | tee "$logfile"
 
-    	#check if a .out file was created (successful crack)
-    	if [ -f "${img}.out"]; then
-        	echo "Success! Hidden data extracted to: ${img}.out"
-        	cp "${img}.out" "$outfile"
-    	fi
+    # Stegcracker creates the file in the same directory as the input with .out appended
+	stegcracker_output="${img}.out"
 
-    	#calculate and display time
+    	#check if a .out file was created (successful crack)
+    	if [ -f "$stegcracker_output" ]; then
+        	echo "Success! Hidden data extracted to: ${filename}.out"
+        	cp "$stegcracker_output" "$outfile"
+		rm "$stegcracker_output"
+    	fi
+    #calculate and display time
 	END=$(date +%s%N)
-	elapsed=$((END - start))
-	echo "time taken: ${elapsed} seconds"
+	elapsed=$((END - start) / 1000000)
+	echo "time taken: ${elapsed} milliseconds"
 	echo "==="
     	echo ""
 
