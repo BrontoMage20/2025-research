@@ -16,7 +16,7 @@ fi
 SCRIPT_START=$(date +%s%N)
 #IMAGE_COUNT=0
 TOTAL_IMAGE_TIME=0
-total=$(find /home/brontomage20/steghide_stegos_part2 -type f ( -iname '.jpg' -o -iname '.jpeg' ) | wc -l)
+total=$(find /home/brontomage20/steghide_stegos_part2 -type f \( -iname '*.jpg' -o -iname '*.jpeg' \) | wc -l)
 
 # Process all JPG files.
 echo "Processing: JPG files."
