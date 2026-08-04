@@ -62,8 +62,8 @@ find <folder location> -type f -name '*.jpeg' | while read -r img; do
     	#get just the file name for the output
     	filename=$(basename "$img")
 
-    	outfile="./stegcracker_results_part2/${filename}.out"
-    	logfile="./stegcracker_results_part2/${filename}_result.txt"
+    	outfile="/home/brontomage20/stegcracker_results_part2/${filename}.out"
+    	logfile="/home/brontomage20/stegcracker_results_part2/${filename}_result.txt"
 
     	#run stegcracker and save results
     	stegcracker "$img" 2>&1 | tee "$logfile"
