@@ -55,7 +55,7 @@ done
 
 #Process all JPEG files.
 echo "Processing: JPEG files."
-find . -type f -name '*.jpeg' | while read -r img; do
+find /home/brontomage20/steghide_stegos_part2 -type f -name '*.jpeg' | while read -r img; do
 	echo "============="
 	echo "Processing: $img"
 	echo "============="
