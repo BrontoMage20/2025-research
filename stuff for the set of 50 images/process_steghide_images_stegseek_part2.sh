@@ -14,8 +14,9 @@ fi
 
 # Track total time and count.
 SCRIPT_START=$(date +%s%N)
-IMAGE_COUNT=0
+#IMAGE_COUNT=0
 TOTAL_IMAGE_TIME=0
+total=$(find /home/brontomage20/steghide_stegos_part2 -type f ( -iname '.jpg' -o -iname '.jpeg' ) | wc -l)
 
 # Process all JPG files.
 echo "Processing: JPG files."
@@ -44,7 +45,7 @@ find /home/brontomage20/steghide_stegos_part2 -type f -name '*.jpg' | while read
 	echo ""
 
 	# Update counters
-	IMAGE_COUNT=$((IMAGE_COUNT + 1))
+	#IMAGE_COUNT=$((IMAGE_COUNT + 1))
 	TOTAL_IMAGE_TIME=$(((TOTAL_IMAGE_TIME + ELAPSED) / 1000000))
 
 done
@@ -80,7 +81,7 @@ find /home/brontomage20/steghide_stegos_part2 -type f -name '*.jpeg' | while rea
 	echo ""
 
 	# Update counters
-	IMAGE_COUNT=$((IMAGE_COUNT + 1))
+	#IMAGE_COUNT=$((IMAGE_COUNT + 1))
 	TOTAL_IMAGE_TIME=$((TOTAL_IMAGE_TIME + ELAPSED))
 done
 
@@ -112,7 +113,7 @@ done
 #	echo ""
 #
 #	# Update counters
-#	IMAGE_COUNT=$((IMAGE_COUNT + 1))
+#	#IMAGE_COUNT=$((IMAGE_COUNT + 1))
 #	TOTAL_IMAGE_TIME=$((TOTAL_IMAGE_TIME + ELAPSED))
 #done
 
@@ -120,8 +121,8 @@ done
 SCRIPT_END=$(date +%s%N)
 TOTAL_TIME=$(((SCRIPT_END - SCRIPT_START) / 1000000))
 
-if [ $IMAGE_COUNT -gt 0 ]; then
-	AVERAGE_TIME=$((TOTAL_IMAGE_TIME / IMAGE_COUNT))
+if [ $total -gt 0 ]; then
+	AVERAGE_TIME=$((TOTAL_IMAGE_TIME / total))
 else
 	AVERAGE_TIME=0
 fi
@@ -132,7 +133,7 @@ echo "Processing complete! Check results in:"
 echo "/home/brontomage20/stegseek_steghide_results_part2"
 echo ""
 echo "Statistics:"
-echo " - Total images processed: ${IMAGE_COUNT}"
+echo " - Total images processed: ${total}"
 echo " - Total processing time: ${TOTAL_TIME} milliseconds ($((TOTAL_TIME / 60)) minutes/1000000)"
 echo " - Average time per image: ${AVERAGE_TIME} milliseconds"
 echo "============================"
@@ -154,7 +155,7 @@ if [ $SUCCESSFUL -eq 0 ]; then
 else
 	echo ""
 	echo "Total successful extractions: $SUCCESSFUL"
-	echo "Number of failed extractions: $((IMAGE_COUNT - SUCCESSFUL))"
+	echo "Number of failed extractions: $((total - SUCCESSFUL))"
 fi
 
 
