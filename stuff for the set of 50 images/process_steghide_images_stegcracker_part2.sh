@@ -19,8 +19,8 @@ find /home/brontomage20/steghide_stegos_part2 -type f -name '*.jpg' | while read
     	#get just the file name for the output
     	filename=$(basename "$img" | sed 's/\.[^.]*$//')
     
-    	outfile="./stegcracker_steghide_results_part2/${filename}.out"
-    	logfile="./stegcracker_steghide_results_part2/${filename}_result.txt"
+    	outfile="/home/brontomage20/stegcracker_steghide_results_part2/${filename}.out"
+    	logfile="/home/brontomage20/stegcracker_steghide_results_part2/${filename}_result.txt"
     
     	#run stegcracker and save results
     	stegcracker "$img" /home/brontomage20/Wordlists/wordlist_updated_no_num.txt 2>&1 | tee "$logfile"
