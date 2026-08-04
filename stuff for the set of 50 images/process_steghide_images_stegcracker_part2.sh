@@ -141,7 +141,7 @@ echo "============================"
 echo "Processing complete! Check results in:"
 echo "home directory"
 echo "Summary of successful extractions:"
-ls -1 stegcracker_steghide_results/*.out 2>/dev/null | while read file; do
+ls -1 stegcracker_steghide_results_part2/*.out 2>/dev/null | while read file; do
 	echo "$file"
 done
 echo "time statistics:"
