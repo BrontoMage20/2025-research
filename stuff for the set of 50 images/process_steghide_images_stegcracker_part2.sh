@@ -80,7 +80,7 @@ find /home/brontomage20/steghide_stegos_part2 -type f -name '*.jpeg' | while rea
     	fi
     #calculate and display time
 	END=$(date +%s%N)
-	elapsed=$((END - start) / 1000000)
+	elapsed=$(((END - start) / 1000000))
 	echo "time taken: ${elapsed} milliseconds"
 	echo "==="
     	echo ""
