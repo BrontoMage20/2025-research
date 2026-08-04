@@ -1,5 +1,5 @@
 # Create results directory
-mkdir -p stegcracker_steghide_results_part2
+mkdir -p /home/brontomage20/stegcracker_steghide_results_part2
 
 #track total time and count
 script_start=$(date +%s%N)
