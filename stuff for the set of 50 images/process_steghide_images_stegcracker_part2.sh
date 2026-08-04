@@ -3,7 +3,8 @@ mkdir -p /home/brontomage20/stegcracker_steghide_results_part2
 
 #track total time and count
 script_start=$(date +%s%N)
-image_count=0
+#image_count=0
+total=$(find /home/brontomage20/steghide_stegos_part2 -type f ( -iname '.jpg' -o -iname '.jpeg' ) | wc -l)
 total_image_time=0
 
 
@@ -42,7 +43,7 @@ find /home/brontomage20/steghide_stegos_part2 -type f -name '*.jpg' | while read
     	echo ""
 
 	#update counters
-	image_count=$((image_count + 1))
+	#image_count=$((image_count + 1))
 	total_image_time=$((total_image_time + elapsed))
 done
 
@@ -51,7 +52,7 @@ done
 		#Update from August of 2026 Liam: yes. yes, it does.
 
 #process all JPEG files found
-find <folder location> -type f -name '*.jpeg' | while read -r img; do
+find /home/brontomage20/steghide_stegos_part2 -type f -name '*.jpeg' | while read -r img; do
     	echo "==="
     	echo "Processing: $img"
     	echo "==="
@@ -82,7 +83,7 @@ find <folder location> -type f -name '*.jpeg' | while read -r img; do
     	echo ""
 
 	#update counters
-	image_count=$((image_count + 1))
+	#image_count=$((image_count + 1))
 	total_image_time=$((total_image_time + elapsed))
 done
 
@@ -120,7 +121,7 @@ done
 #	echo ""
 #
 #	#update counters
-#	image_count=$((image_count + 1))
+#	#image_count=$((image_count + 1))
 #	total_image_time=$((total_image_time + elapsed))
 #done
 
@@ -129,8 +130,8 @@ done
 script_end=$(date +%s%N)
 total_time=$(((script_end - script_start) / 1000000))
 
-if [ $image_count -gt 0 ]; then
-	average_time=$((total_image_time / image_count))
+if [ $total -gt 0 ]; then
+	average_time=$((total_image_time / total))
 else
 	average_time=0
 fi
@@ -141,11 +142,11 @@ echo "============================"
 echo "Processing complete! Check results in:"
 echo "home directory"
 echo "Summary of successful extractions:"
-ls -1 stegcracker_steghide_results_part2/*.out 2>/dev/null | while read file; do
+ls -1 /home/brontomage20/stegcracker_steghide_results_part2/*.out 2>/dev/null | while read file; do
 	echo "$file"
 done
 echo "time statistics:"
-echo " - total images processed: ${image_count}"
+echo " - total images processed: ${total}"
 echo " - total processing time: ${total_time} milliseconds ($((total_time / 60)) minutes/1000000)"
 echo "============================"
 echo ""
@@ -154,7 +155,7 @@ echo ""
 echo ""
 echo "summary of successful extractions:"
 successful=0
-for file in ./stegcracker_steghide_results_part2/*.out; do
+for file in /home/brontomage20/stegcracker_steghide_results_part2/*.out; do
 	if [ -f "$file" ] && [ -s "$file" ]; then
 		echo "[*checkmark*] $file"
 		successful=$((successful + 1))
@@ -166,5 +167,5 @@ if [ $successful -eq 0 ]; then
 else
 	echo ""
 	echo "total successful extractions: $successful"
-	echo "total failed extractions: $((image_count - successful))"
+	echo "total failed extractions: $((total - successful))"
 fi
