@@ -142,7 +142,7 @@ echo ""
 echo ""
 echo "Summary of successful extractions:"
 SUCCESSFUL=0
-for file in ./stegseek_steghide_results/*.out; do
+for file in /home/brontomage20/stegseek_steghide_results/*.out; do
 	if [ -f "$file" ] && [ -s "$file" ]; then
 		echo "[*checkmark*] $file"
 		SUCCESSFUL=$((SUCCESSFUL + 1))
