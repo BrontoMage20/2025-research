@@ -19,7 +19,7 @@ echo ""
 count=0
 success=0
 failed=0
-total=$(ls "$output_dir"/*.jpg "$output_dir"/*.jpeg 2>/dev/null | wc -l)
+total=$(ls "$stego_dir"/*.jpg "$stego_dir"/*.jpeg 2>/dev/null | wc -l)
 
 echo "found $total stego files to process"
 echo ""
