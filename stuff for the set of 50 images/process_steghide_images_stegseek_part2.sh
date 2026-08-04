@@ -61,19 +61,19 @@ find /home/brontomage20/steghide_stegos_part2 -type f -name '*.jpeg' | while rea
 	echo "============="
 
 	# Start timing
-	START=$(date +%s)
+	START=$(date +%s%N)
 	
 	# Get just the file name for the output
 	filename=$(basename "$img")
 
-	outfile="/home/brontomage20/stegseek_results_part2/${filename}.out"
-	logfile="/home/brontomage20/stegseek_results_part2/${filename}_result.txt"
+	outfile="/home/brontomage20/stegseek_steghide_results_part2/${filename}.out"
+	logfile="/home/brontomage20/stegseek_steghide_results_part2/${filename}_result.txt"
 
 	# Run stegseek and save results
-	stegseek "$img" /usr/share/wordlists/rockyou.txt "$outfile" 2>&1 | tee "$logfile"
+	stegseek "$img" /home/brontomage20/Wordlists/wordlist_updated_no_num.txt "$outfile" 2>&1 | tee "$logfile"
 
 	# Calculate and display time
-	END=$(date +%s)
+	END=$(date +%s%N)
 	ELAPSED=$((END - START))
 	echo "Time taken: ${ELAPSED} seconds."
 	echo "==="
@@ -129,7 +129,7 @@ fi
 
 echo "============================"
 echo "Processing complete! Check results in:"
-echo "~/Desktop/chal/stegano/archive/stegseek_steghide_results_part2"
+echo "/home/brontomage20/stegseek_steghide_results_part2"
 echo ""
 echo "Statistics:"
 echo " - Total images processed: ${IMAGE_COUNT}"
