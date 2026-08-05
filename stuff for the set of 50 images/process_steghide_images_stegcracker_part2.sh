@@ -24,7 +24,7 @@ find /home/brontomage20/steghide_stegos_part2 -type f -name '*.jpg' | while read
     	logfile="/home/brontomage20/stegcracker_steghide_results_part2/${filename}_result.txt"
     
     	#run stegcracker and save results
-    	stegcracker "$img" /home/brontomage20/Wordlists/wordlist_updated_no_num.txt 2>&1 | tee "$logfile"
+    	stegcracker "$img" /home/brontomage20/Wordlists/wordlist_updated_no_num.txt -q 2>&1 | tee "$logfile"
     
 	# Stegcracker creates the file in the same directory as the input with .out appended
 	stegcracker_output="${img}.out"
@@ -145,9 +145,9 @@ echo "============================"
 echo "Processing complete! Check results in:"
 echo "home directory"
 echo "Summary of successful extractions:"
-ls -1 /home/brontomage20/stegcracker_steghide_results_part2/*.out 2>/dev/null | while read file; do
-	echo "$file"
-done
+# ls -1 /home/brontomage20/stegcracker_steghide_results_part2/*.out 2>/dev/null | while read file; do
+# 	echo "$file"
+# done
 echo "time statistics:"
 echo " - total images processed: ${total}"
 echo " - total processing time: ${total_time} milliseconds ($((total_time / 60)) minutes/1000000)"
@@ -160,7 +160,7 @@ echo "summary of successful extractions:"
 successful=0
 for file in /home/brontomage20/stegcracker_steghide_results_part2/*.out; do
 	if [ -f "$file" ] && [ -s "$file" ]; then
-		echo "[*checkmark*] $file"
+		# echo "[*checkmark*] $file"
 		successful=$((successful + 1))
 	fi
 done
