@@ -47,16 +47,13 @@ elif [ -n "$seed_input" ]; then
 fi
 echo "Using seed: $seed"
 
-mapfile -d '' -t files < <(printf '%s\0' "${files[@]}" | python3 - "$seed" <<'PY'
+mapfile -d '' -t files < <(printf '%s\0' "${files[@]}" | python3 -c '
 import sys, random
-seed = int(sys.argv[1])
-random.seed(seed)
-data = sys.stdin.buffer.read().split(b'\0')
-data = [x.decode('utf-8') for x in data if x]
+random.seed(int(sys.argv[1]))
+data = [x for x in sys.stdin.buffer.read().split(b"\0") if x]
 random.shuffle(data)
-sys.stdout.buffer.write(b'\0'.join(x.encode('utf-8') for x in data))
-PY
-)
+sys.stdout.buffer.write(b"\0".join(data))
+' "$seed")
 
 #track total time and count
 script_start=$(date +%s%N)

@@ -29,6 +29,23 @@ count=0
 success=0
 failed=0
 
+
+
+
+
+
+
+#The code works up until this point. i think the problem may be with the way the code 
+
+#Begin "problem child" code
+
+
+
+
+
+
+
+
 # Gather all JPG/JPEG cover images.
 files=()
 while IFS= read -r -d '' file; do
@@ -53,21 +70,33 @@ elif [ -n "$seed_input" ]; then
 fi
 echo "Using seed: $seed"
 
-mapfile -d '' -t files < <(printf '%s\0' "${files[@]}" | python3 - "$seed" <<'PY'
+mapfile -d '' -t files < <(printf '%s\0' "${files[@]}" | python3 -c '
 import sys, random
-seed = int(sys.argv[1])
-random.seed(seed)
-data = sys.stdin.buffer.read().split(b'\0')
-data = [x.decode('utf-8') for x in data if x]
+random.seed(int(sys.argv[1]))
+data = [x for x in sys.stdin.buffer.read().split(b"\0") if x]
 random.shuffle(data)
-sys.stdout.buffer.write(b'\0'.join(x.encode('utf-8') for x in data))
-PY
-)
+sys.stdout.buffer.write(b"\0".join(data))
+' "$seed")
 
 #track total and time count
 script_start=$(date +%s%N)
 image_count="$count"
 total_image_time=0
+
+
+
+
+
+
+
+#End "problem child" code. Rest of this should actually work.
+
+
+
+
+
+
+
 
 # This loop processes every selected image file in randomized order.
 for cover_file in "${files[@]}"; do
