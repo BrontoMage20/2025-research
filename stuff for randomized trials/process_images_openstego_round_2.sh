@@ -21,10 +21,44 @@ echo ""
 count=0
 success=0
 failed=0
-total=$(ls "$stego_dir"/*.bmp 2>/dev/null | wc -l)
+
+# Gather all BMP stego files.
+files=()
+while IFS= read -r -d '' file; do
+	files+=("$file")
+done < <(find "$stego_dir" -maxdepth 1 -type f -iname '*.bmp' -print0)
+
+total=${#files[@]}
+
+if [ "$total" -eq 0 ]; then
+	echo "No .bmp stego files found in directory: $stego_dir"
+	exit 1
+fi
 
 echo "found $total stego files to process"
 echo ""
+
+# Generate a random seed and allow reuse of a previous seed.
+seed=$(od -An -N4 -tu4 /dev/urandom | tr -d ' ')
+echo "Generated random seed: $seed"
+read -rp "Enter seed to reuse or press Enter to keep this seed: " seed_input
+if [[ "$seed_input" =~ ^[0-9]+$ ]]; then
+	seed="$seed_input"
+elif [ -n "$seed_input" ]; then
+	echo "Invalid seed entered, using generated seed."
+fi
+echo "Using seed: $seed"
+
+mapfile -d '' -t files < <(printf '%s\0' "${files[@]}" | python3 - "$seed" <<'PY'
+import sys, random
+seed = int(sys.argv[1])
+random.seed(seed)
+data = sys.stdin.buffer.read().split(b'\0')
+data = [x.decode('utf-8') for x in data if x]
+random.shuffle(data)
+sys.stdout.buffer.write(b'\0'.join(x.encode('utf-8') for x in data))
+PY
+)
 
 #track total time and count
 script_start=$(date +%s%N)
@@ -32,7 +66,7 @@ image_count="$count"
 total_image_time=0
 
 #loop through all .bmp files in the stego directory
-for stego_file in "$stego_dir"/*.bmp; do
+for stego_file in "${files[@]}"; do
 	#check if the file exists
 	if [ ! -f "$stego_file" ]; then
 		echo "no .bmp files found in stego directory."

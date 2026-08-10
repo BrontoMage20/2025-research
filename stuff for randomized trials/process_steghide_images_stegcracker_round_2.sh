@@ -1,93 +1,83 @@
 # Create results directory
 mkdir -p /home/brontomage20/stegcracker_steghide_results_round_2
 
-#track total time and count
-script_start=$(date +%s%N)
-#image_count=0
-total=$(find /home/brontomage20/steghide_stegos_round_2 -type f \( -iname '*.jpg' -o -iname '*.jpeg' \) | wc -l)
+# Gather all JPG/JPEG stego files.
+files=()
+while IFS= read -r -d '' file; do
+    files+=("$file")
+done < <(find /home/brontomage20/steghide_stegos_round_2 -maxdepth 1 -type f \( -iname '*.jpg' -o -iname '*.jpeg' \) -print0)
+
+total=${#files[@]}
 total_image_time=0
 
+if [ "$total" -eq 0 ]; then
+    echo "No stego files found in /home/brontomage20/steghide_stegos_round_2"
+    exit 1
+fi
 
-#process all JPG files found
-find /home/brontomage20/steghide_stegos_round_2 -type f -name '*.jpg' | while read -r img; do
-    	echo "==="
-    	echo "Processing: $img"
-    	echo "==="
-    
-    	#start timing
-    	start=$(date +%s%N)
- 
-    	#get just the file name for the output
-    	filename=$(basename "$img" | sed 's/\.[^.]*$//')
-    
-    	outfile="/home/brontomage20/stegcracker_steghide_results_round_2/${filename}.out"
-    	logfile="/home/brontomage20/stegcracker_steghide_results_round_2/${filename}_result.txt"
-    
-    	#run stegcracker and save results
-    	stegcracker "$img" /home/brontomage20/Wordlists/wordlist_updated_no_num.txt -q 2>&1 | tee "$logfile"
-    
-	# Stegcracker creates the file in the same directory as the input with .out appended
-	stegcracker_output="${img}.out"
+echo "found $total stego files to process"
+echo ""
 
-    	#check if a .out file was created (successful crack)
-    	if [ -f "$stegcracker_output" ]; then
-        	echo "Success! Hidden data extracted to: ${filename}.out"
-        	cp "$stegcracker_output" "$outfile"
-		rm "$stegcracker_output"
-    	fi
-	#calculate and display time
-	END=$(date +%s%N)
-	elapsed=$(((END - start) / 1000000))
-	echo "time taken: ${elapsed} milliseconds"
-	echo "==="
-    	echo ""
+# Generate a random seed and allow reuse of a previous seed.
+seed=$(od -An -N4 -tu4 /dev/urandom | tr -d ' ')
+echo "Generated random seed: $seed"
+read -rp "Enter seed to reuse or press Enter to keep this seed: " seed_input
+if [[ "$seed_input" =~ ^[0-9]+$ ]]; then
+    seed="$seed_input"
+elif [ -n "$seed_input" ]; then
+    echo "Invalid seed entered, using generated seed."
+fi
+echo "Using seed: $seed"
 
-	#update counters
-	#image_count=$((image_count + 1))
-	total_image_time=$((total_image_time + elapsed))
-done
+mapfile -d '' -t files < <(printf '%s\0' "${files[@]}" | python3 - "$seed" <<'PY'
+import sys, random
+seed = int(sys.argv[1])
+random.seed(seed)
+data = sys.stdin.buffer.read().split(b'\0')
+data = [x.decode('utf-8') for x in data if x]
+random.shuffle(data)
+sys.stdout.buffer.write(b'\0'.join(x.encode('utf-8') for x in data))
+PY
+)
 
+script_start=$(date +%s%N)
 
-#The below is commented out for now, as I do not know if the system treats "jpeg" and "jpg" as distinct file extensions.
-		#Update from August of 2026 Liam: yes. yes, it does.
+#process all JPG/JPEG files found in randomized order
+for img in "${files[@]}"; do
+    echo "==="
+    echo "Processing: $img"
+    echo "==="
 
-#process all JPEG files found
-find /home/brontomage20/steghide_stegos_round2 -type f -name '*.jpeg' | while read -r img; do
-    	echo "==="
-    	echo "Processing: $img"
-    	echo "==="
+    #start timing
+    start=$(date +%s%N)
 
-    	#start timing
-    	start=$(date +%s%N)
+    #get just the file name for the output
+    filename=$(basename "$img" | sed 's/\.[^.]*$//')
 
-    	#get just the file name for the output
-    	filename=$(basename "$img" | sed 's/\.[^.]*$//')
+    outfile="/home/brontomage20/stegcracker_steghide_results_round_2/${filename}.out"
+    logfile="/home/brontomage20/stegcracker_steghide_results_round_2/${filename}_result.txt"
 
-    	outfile="/home/brontomage20/stegcracker_steghide_results_round_2/${filename}.out"
-    	logfile="/home/brontomage20/stegcracker_steghide_results_round_2/${filename}_result.txt"
-
-    	#run stegcracker and save results
-    	stegcracker "$img" /home/brontomage20/Wordlists/wordlist_updated_no_num.txt 2>&1 | tee "$logfile"
+    #run stegcracker and save results
+    stegcracker "$img" /home/brontomage20/Wordlists/wordlist_updated_no_num.txt -q 2>&1 | tee "$logfile"
 
     # Stegcracker creates the file in the same directory as the input with .out appended
-	stegcracker_output="${img}.out"
+    stegcracker_output="${img}.out"
 
-    	#check if a .out file was created (successful crack)
-    	if [ -f "$stegcracker_output" ]; then
-        	echo "Success! Hidden data extracted to: ${filename}.out"
-        	cp "$stegcracker_output" "$outfile"
-		rm "$stegcracker_output"
-    	fi
+    #check if a .out file was created (successful crack)
+    if [ -f "$stegcracker_output" ]; then
+        echo "Success! Hidden data extracted to: ${filename}.out"
+        cp "$stegcracker_output" "$outfile"
+        rm "$stegcracker_output"
+    fi
+
     #calculate and display time
-	END=$(date +%s%N)
-	elapsed=$(((END - start) / 1000000))
-	echo "time taken: ${elapsed} milliseconds"
-	echo "==="
-    	echo ""
+    END=$(date +%s%N)
+    elapsed=$(((END - start) / 1000000))
+    echo "time taken: ${elapsed} milliseconds"
+    echo "==="
+    echo ""
 
-	#update counters
-	#image_count=$((image_count + 1))
-	total_image_time=$((total_image_time + elapsed))
+    total_image_time=$((total_image_time + elapsed))
 done
 
 

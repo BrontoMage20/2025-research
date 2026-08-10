@@ -12,78 +12,78 @@ if [ -f /usr/share/wordlists/rockyou.txt.gz ]; then
 	sudo gzip -d /usr/share/wordlists/rockyou.txt.gz
 fi
 
-# Track total time and count.
-SCRIPT_START=$(date +%s%N)
-#IMAGE_COUNT=0
+# Gather all JPG/JPEG stego files.
+files=()
+while IFS= read -r -d '' file; do
+    files+=("$file")
+done < <(find /home/brontomage20/steghide_stegos_round_2 -maxdepth 1 -type f \( -iname '*.jpg' -o -iname '*.jpeg' \) -print0)
+
+total=${#files[@]}
+
 TOTAL_IMAGE_TIME=0
-total=$(find /home/brontomage20/steghide_stegos_round_2 -type f \( -iname '*.jpg' -o -iname '*.jpeg' \) | wc -l)
 
-# Process all JPG files.
-echo "Processing: JPG files."
-find /home/brontomage20/steghide_stegos_round_2 -type f -name '*.jpg' | while read -r img; do
-	echo "============="
-	echo "Processing: $img"
-	echo "============="
-	
-	# Start timing
-	START=$(date +%s%N)
+if [ "$total" -eq 0 ]; then
+    echo "No stego files found in /home/brontomage20/steghide_stegos_round_2"
+    exit 1
+fi
 
-	# Get just the file name for the output
-	filename=$(basename "$img")
-	
-	outfile="/home/brontomage20/stegseek_steghide_results_round_2/${filename}.out"
-	logfile="/home/brontomage20/stegseek_steghide_results_round_2/${filename}_result.txt"
+echo "found $total stego files to process"
+echo ""
 
-	# Run stegseek and save results
-	stegseek "$img" /home/brontomage20/Wordlists/wordlist_updated_no_num.txt "$outfile" 2>&1 | tee "$logfile"
-	
-	# Calculate and display time
-	END=$(date +%s%N)
-	ELAPSED=$(((END - START) / 1000000))
-	echo "Time taken: ${ELAPSED} milliseconds."
-	echo "==="
-	echo ""
+# Generate a random seed and allow reuse of a previous seed.
+seed=$(od -An -N4 -tu4 /dev/urandom | tr -d ' ')
+echo "Generated random seed: $seed"
+read -rp "Enter seed to reuse or press Enter to keep this seed: " seed_input
+if [[ "$seed_input" =~ ^[0-9]+$ ]]; then
+    seed="$seed_input"
+elif [ -n "$seed_input" ]; then
+    echo "Invalid seed entered, using generated seed."
+fi
+echo "Using seed: $seed"
 
-	# Update counters
-	#IMAGE_COUNT=$((IMAGE_COUNT + 1))
-	TOTAL_IMAGE_TIME=$(((TOTAL_IMAGE_TIME + ELAPSED) / 1000000))
+mapfile -d '' -t files < <(printf '%s\0' "${files[@]}" | python3 - "$seed" <<'PY'
+import sys, random
+seed = int(sys.argv[1])
+random.seed(seed)
+data = sys.stdin.buffer.read().split(b'\0')
+data = [x.decode('utf-8') for x in data if x]
+random.shuffle(data)
+sys.stdout.buffer.write(b'\0'.join(x.encode('utf-8') for x in data))
+PY
+)
 
+SCRIPT_START=$(date +%s%N)
+
+# Process all JPG/JPEG files in randomized order.
+for img in "${files[@]}"; do
+    echo "============="
+    echo "Processing: $img"
+    echo "============="
+    
+    # Start timing
+    START=$(date +%s%N)
+
+    # Get just the file name for the output
+    filename=$(basename "$img")
+    
+    outfile="/home/brontomage20/stegseek_steghide_results_round_2/${filename}.out"
+    logfile="/home/brontomage20/stegseek_steghide_results_round_2/${filename}_result.txt"
+
+    # Run stegseek and save results
+    stegseek "$img" /home/brontomage20/Wordlists/wordlist_updated_no_num.txt "$outfile" 2>&1 | tee "$logfile"
+    
+    # Calculate and display time
+    END=$(date +%s%N)
+    ELAPSED=$(((END - START) / 1000000))
+    echo "Time taken: ${ELAPSED} milliseconds."
+    echo "==="
+    echo ""
+
+    TOTAL_IMAGE_TIME=$((TOTAL_IMAGE_TIME + ELAPSED))
 done
 
 
 #The following has ben commented out, as I am not sure if the extension jpeg is necessarily distinct from jpg.
-
-
-#Process all JPEG files.
-echo "Processing: JPEG files."
-find /home/brontomage20/steghide_stegos_round_2 -type f -name '*.jpeg' | while read -r img; do
-	echo "============="
-	echo "Processing: $img"
-	echo "============="
-
-	# Start timing
-	START=$(date +%s%N)
-	
-	# Get just the file name for the output
-	filename=$(basename "$img")
-
-	outfile="/home/brontomage20/stegseek_steghide_results_round_2/${filename}.out"
-	logfile="/home/brontomage20/stegseek_steghide_results_round_2/${filename}_result.txt"
-
-	# Run stegseek and save results
-	stegseek "$img" /home/brontomage20/Wordlists/wordlist_updated_no_num.txt "$outfile" 2>&1 | tee "$logfile"
-
-	# Calculate and display time
-	END=$(date +%s%N)
-	ELAPSED=$(((END - START) / 1000000))
-	echo "Time taken: ${ELAPSED} milliseconds."
-	echo "==="
-	echo ""
-
-	# Update counters
-	#IMAGE_COUNT=$((IMAGE_COUNT + 1))
-	TOTAL_IMAGE_TIME=$((TOTAL_IMAGE_TIME + ELAPSED))
-done
 
 
 ##Process all BMP files.
