@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Create results directory
 mkdir -p /home/brontomage20/stegcracker_steghide_results_round_2
 
